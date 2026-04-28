@@ -12,6 +12,7 @@
     /* Wider peeks stay hoverable when Windows snap adds a resize border. */
     --tabbar-peek-width: 8px;
     --panel-peek-width: 8px;
+    --edge-hotspot-height: 54px;
     --panel-top-offset: 53px;    /* adjust to match your toolbar height */
     --panel-bottom-offset: 34px; /* adjust to match your status bar height */
 }
@@ -23,6 +24,7 @@
     position: absolute;
     transform: translateX(calc(-100% + var(--tabbar-peek-width)));
     transition: var(--tabbar-transition) !important;
+    clip-path: inset(0 0 calc(100% - var(--edge-hotspot-height)) calc(100% - var(--tabbar-peek-width)));
     opacity: 0;
     z-index: 1;
 }
@@ -36,20 +38,14 @@
 #browser.tabs-right .tabbar-wrapper {
     right: 0;
     transform: translateX(calc(100% - var(--tabbar-peek-width)));
+    clip-path: inset(0 calc(100% - var(--tabbar-peek-width)) calc(100% - var(--edge-hotspot-height)) 0);
 }
 
 /* Show tabbar on hover */
 #browser:is(.tabs-left, .tabs-right) .tabbar-wrapper:hover {
     transform: translateX(0);
     transition: var(--tabbar-transition) !important;
-    opacity: 1;
-}
-
-/* Show when mouse approaches edge of screen */
-#browser:is(.tabs-left) .mainbar:hover + .tabbar-wrapper,
-#browser:is(.tabs-right) .webpage:hover + .tabbar-wrapper {
-    transform: translateX(0);
-    transition: var(--tabbar-transition) !important;
+    clip-path: inset(0);
     opacity: 1;
 }
 
@@ -59,6 +55,7 @@
     .quick-command-container.workspace-naming,
     input[placeholder*="workspace"]) .tabbar-wrapper {
     transform: translateX(0) !important;
+    clip-path: inset(0) !important;
     opacity: 1 !important;
 }
 
@@ -71,7 +68,18 @@ html:active:not(:has(.tabbar-wrapper:hover,
         .workspace-popup:visible)) .tabbar-wrapper {
     transform: translateX(calc(-100% + var(--tabbar-peek-width))) !important;
     transition: var(--tabbar-transition) !important;
+    clip-path: inset(0 0 calc(100% - var(--edge-hotspot-height)) calc(100% - var(--tabbar-peek-width))) !important;
     opacity: 0 !important;
+}
+
+html:active:not(:has(.tabbar-wrapper:hover,
+        .quick-command-container.workspace-naming,
+        .workspace-naming,
+        input[placeholder="workspace"]:focus,
+        .WorkspacePopup:visible,
+        .workspace-popup:visible)) #browser.tabs-right .tabbar-wrapper {
+    transform: translateX(calc(100% - var(--tabbar-peek-width))) !important;
+    clip-path: inset(0 calc(100% - var(--tabbar-peek-width)) calc(100% - var(--edge-hotspot-height)) 0) !important;
 }
 
 /*----- Web Panel Auto-Hide Behavior -----*/
@@ -92,6 +100,7 @@ html:active:not(:has(.tabbar-wrapper:hover,
     bottom: var(--panel-bottom-offset);
     transform: translateX(calc(100% - var(--panel-peek-width)));
     transition: var(--tabbar-transition) !important;
+    clip-path: inset(0 calc(100% - var(--panel-peek-width)) calc(100% - var(--edge-hotspot-height)) 0);
     opacity: 0;
     z-index: 9999;
 }
@@ -100,22 +109,26 @@ html:active:not(:has(.tabbar-wrapper:hover,
 #browser #panels-container:hover {
     transform: translateX(0);
     transition: var(--tabbar-transition) !important;
+    clip-path: inset(0);
     opacity: 1;
 }
 
 /* Mutual exclusion: hide panel when tabbar is hovered */
 #browser:has(.tabbar-wrapper:hover) #panels-container {
     transform: translateX(calc(100% - var(--panel-peek-width))) !important;
+    clip-path: inset(0 calc(100% - var(--panel-peek-width)) calc(100% - var(--edge-hotspot-height)) 0) !important;
     opacity: 0 !important;
 }
 
 /* Mutual exclusion: hide tabbar when panel is hovered */
 #browser:is(.tabs-left):has(#panels-container:hover) .tabbar-wrapper {
     transform: translateX(calc(-100% + var(--tabbar-peek-width))) !important;
+    clip-path: inset(0 0 calc(100% - var(--edge-hotspot-height)) calc(100% - var(--tabbar-peek-width))) !important;
     opacity: 0 !important;
 }
 #browser.tabs-right:has(#panels-container:hover) .tabbar-wrapper {
     transform: translateX(calc(100% - var(--tabbar-peek-width))) !important;
+    clip-path: inset(0 calc(100% - var(--tabbar-peek-width)) calc(100% - var(--edge-hotspot-height)) 0) !important;
     opacity: 0 !important;
 }
 
@@ -123,6 +136,7 @@ html:active:not(:has(.tabbar-wrapper:hover,
 html:active:not(:has(#panels-container:hover)) #panels-container {
     transform: translateX(calc(100% - var(--panel-peek-width))) !important;
     transition: var(--tabbar-transition) !important;
+    clip-path: inset(0 calc(100% - var(--panel-peek-width)) calc(100% - var(--edge-hotspot-height)) 0) !important;
     opacity: 0 !important;
 }
 
@@ -139,6 +153,7 @@ html:active:not(:has(#panels-container:hover)) #panels-container {
 #browser #panels-container:not(.icons) {
     position: static !important;
     transform: none !important;
+    clip-path: inset(0) !important;
     opacity: 1 !important;
     transition: none !important;
     z-index: auto !important;

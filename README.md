@@ -13,6 +13,7 @@ Vivaldi is pointed at this **folder**, not a specific file. It loads every `.css
 
 ```css
 --tabbar-peek-width: 3px;    /* how much of the tab bar peeks out when hidden */
+--edge-hotspot-height: 36px; /* height of the top-left/top-right trigger area */
 --panel-top-offset: 53px;    /* match your toolbar/address bar height */
 --panel-bottom-offset: 34px; /* match your status bar height */
 ```
@@ -27,6 +28,8 @@ Uses `position: absolute` + `transform: translateX()`. Taking it out of flow mea
 
 This works because `.tabbar-wrapper` sits in a part of the DOM where its containing block doesn't have `overflow: hidden`, so the peek strip stays hoverable even when mostly off-screen.
 
+The hidden hit area is intentionally clipped to the top corner only via `clip-path`, so the tab bar won't open from the full left or right edge anymore.
+
 ### Web panel — why it's more complicated
 
 `#panels-container` lives inside an inner flex container (likely `.inner`) that **does** have `overflow: hidden`. That means:
@@ -38,6 +41,8 @@ This works because `.tabbar-wrapper` sits in a part of the DOM where its contain
 **The solution: `position: fixed`.**
 
 Fixed elements are positioned relative to the viewport and are **never clipped by ancestor `overflow: hidden`**. The peek strip stays inside the viewport bounds and receives pointer events normally. `transform` can then be used for the slide, giving smooth GPU-composited animation while overlaying the page. `top` and `bottom` offsets are needed to keep it within the content area (clear of toolbar and status bar).
+
+As with the tab bar, the hidden panel trigger is clipped to a small top-right hotspot instead of the full edge.
 
 ### Sticky panel when open
 
