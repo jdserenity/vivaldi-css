@@ -113,8 +113,8 @@ html:active:not(:has(.tabbar-wrapper:hover,
     opacity: 1;
 }
 
-/* Mutual exclusion: hide panel when tabbar is hovered */
-#browser:has(.tabbar-wrapper:hover) #panels-container {
+/* Mutual exclusion: hide panel only when icon strip is shown (no open panel) */
+#browser:has(.tabbar-wrapper:hover) #panels-container.icons {
     transform: translateX(calc(100% - var(--panel-peek-width))) !important;
     clip-path: inset(0 calc(100% - var(--panel-peek-width)) calc(100% - var(--edge-hotspot-height)) 0) !important;
     opacity: 0 !important;
@@ -163,5 +163,6 @@ html:active:not(:has(#panels-container:hover)) #panels-container {
 html:active #browser #panels-container:not(.icons),
 #browser:has(.tabbar-wrapper:hover) #panels-container:not(.icons) {
     transform: none !important;
+    clip-path: inset(0) !important;
     opacity: 1 !important;
 }
